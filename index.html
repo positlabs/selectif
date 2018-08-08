@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="dat.gui.css">
+        <script src="dat.gui.min.js"></script>
+    </head>
+    <body>
+        <img id="source-image" src="images/lincoln.jpg" hidden>
+        <!-- <img id="source-image" src="images/washington.jpg" hidden> -->
+        <!-- <img id="source-image" src="images/nick-cage.png" hidden> -->
+        <!-- <img id="source-image" src="images/jeff-goldblum.jpg" hidden> -->
+        <div id="inputs">
+            <div class="option" type='image' size='29' count='10'><img src="images/lincoln.jpg"></div>
+            <div class="option" type='image' size='8' count='24'><img src="images/washington.jpg"></div>
+            <div class="option" type='image' size='2' count='29'><img src="images/nick-cage.png"></div>
+            <div class="option" type='photo-upload' title='upload photo'>+<input type="file" accept="image/*"></div>
+        </div>
+        <canvas id="source"></canvas>
+        <canvas id="result"></canvas>
+        <footer>
+            Inspired by 
+            <a href="https://www.instagram.com/p/BmGvIBbhWPs/?hl=en&taken-by=kensukekoike">Kensuke Koike's Avatar</a>
+        </footer>
+        <script src="selectif.js"></script>
+    </body>
+</html>
