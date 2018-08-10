@@ -1,5 +1,9 @@
 <html>
     <head>
+        <meta property="og:url"                content="https://positlabs.github.io/selectif" />
+        <meta property="og:title"              content="Selectif" />
+        <meta property="og:description"        content="Interactive demo of selective sampling" />
+        <meta property="og:image"              content="https://positlabs.github.io/selectif/images/og.png" />
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="dat.gui.css">
         <script src="dat.gui.min.js"></script>
@@ -11,8 +15,9 @@
         <!-- <img id="source-image" src="images/jeff-goldblum.jpg" hidden> -->
         <div id="inputs">
             <div class="option" type='image' size='29' count='10'><img src="images/lincoln.jpg"></div>
-            <div class="option" type='image' size='8' count='24'><img src="images/washington.jpg"></div>
+            <div class="option" type='image' size='23' count='10'><img src="images/washington.jpg"></div>
             <div class="option" type='image' size='2' count='29'><img src="images/nick-cage.png"></div>
+            <div class="option" type='image' size='105' count='15'><img src="images/jeff-goldblum.jpg"></div>
             <div class="option" type='photo-upload' title='upload photo'>+<input type="file" accept="image/*"></div>
         </div>
         <canvas id="source"></canvas>

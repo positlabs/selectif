@@ -1,3 +1,10 @@
+/*
+
+    TODO
+    - save image button
+
+*/
+
 var sourceInput = document.querySelector('.option[type="photo-upload"] input')
 var sourceImage = document.querySelector('img#source-image')
 var sourceCanvas = document.querySelector('canvas#source')
@@ -12,14 +19,13 @@ sourceImage.addEventListener('load', () => {
 })
 
 sourceInput.addEventListener('change', e => {
-    console.log(e)
     if (sourceInput.files && sourceInput.files[0]) {
         var reader = new FileReader()
         reader.onload = function(e) {
             sourceImage.src = e.target.result
         }
         reader.readAsDataURL(sourceInput.files[0])
-      }
+    }
 })
 
 // resize source canvas to source dimensions
@@ -36,6 +42,7 @@ function initResult(){
     resultCanvas.height = countY * model.size
 }
 
+// TODO cache rects. Invalidate when params change
 function getRects(){
     const countX = model.count
     const countY = Math.round(sourceCanvas.height / sourceCanvas.width * countX)
