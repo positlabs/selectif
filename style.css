@@ -63,3 +63,9 @@ a {
     opacity: 0;
     cursor: pointer;
 }
+
+.dg.main.a {
+    position: fixed;
+    left: 0;
+    top: 0;
+}

@@ -3,6 +3,7 @@
     TODO
     - save image button
     - webcam input
+    - webgl shader
 
 */
 
@@ -48,8 +49,8 @@ function getRects(){
     const countX = model.count
     const countY = Math.round(sourceCanvas.height / sourceCanvas.width * countX)
     const spacing = sourceCanvas.width / countX
-    const offsetX = (sourceCanvas.width / countX) / 2 - model.size / 2
-    const offsetY = (sourceCanvas.height / countY) / 2 - model.size / 2
+    const offsetX = (sourceCanvas.width / countX) / 2 - model.size / 2 + model.offsetX / 100 * sourceCanvas.width / countX
+    const offsetY = (sourceCanvas.height / countY) / 2 - model.size / 2 + model.offsetY / 100 * sourceCanvas.height / countY
     return Array(countX * countY).fill(0).map((z, i) => {
         const x = i % countX
         const y = Math.floor(i / countX)
@@ -78,11 +79,15 @@ function drawResult(){
 
 const model = {
     size: 29,
-    count: 10
+    count: 10,
+    offsetX: 0, 
+    offsetY: 0
 }
 const gui = new dat.GUI()
-const size = gui.add(model, 'size', 2, 200).step(1).listen()
-const count = gui.add(model, 'count', 2, 50).step(1).listen()
+const size = gui.add(model, 'size', 2, 1000).step(1).listen()
+const count = gui.add(model, 'count', 2, 400).step(1).listen()
+const offsetX = gui.add(model, 'offsetX', -100, 100).step(1).listen()
+const offsetY = gui.add(model, 'offsetY', -100, 100).step(1).listen()
 
 size.onChange((val) => {
     initResult()
@@ -91,6 +96,18 @@ size.onChange((val) => {
 })
 
 count.onChange((val) => {
+    initResult()
+    drawSource()
+    drawResult()
+})
+
+offsetX.onChange((val) => {
+    initResult()
+    drawSource()
+    drawResult()
+})
+
+offsetY.onChange((val) => {
     initResult()
     drawSource()
     drawResult()
