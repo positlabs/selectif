@@ -4,6 +4,7 @@
     - save image button
     - webcam input
     - webgl shader
+    - video recorder
 
 */
 
@@ -14,12 +15,6 @@ var resultCanvas = document.querySelector('canvas#result')
 var sourceCtx = sourceCanvas.getContext('2d')
 var resultCtx = resultCanvas.getContext('2d')
 
-sourceImage.addEventListener('load', () => {
-    initSource()
-    initResult()
-    drawResult()
-})
-
 sourceInput.addEventListener('change', e => {
     if (sourceInput.files && sourceInput.files[0]) {
         var reader = new FileReader()
@@ -28,6 +23,11 @@ sourceInput.addEventListener('change', e => {
         }
         reader.readAsDataURL(sourceInput.files[0])
     }
+})
+
+sourceImage.addEventListener('load', () => {
+    initSource()
+    update()
 })
 
 // resize source canvas to source dimensions
@@ -44,7 +44,6 @@ function initResult(){
     resultCanvas.height = countY * model.size
 }
 
-// TODO cache rects. Invalidate when params change
 function getRects(){
     const countX = model.count
     const countY = Math.round(sourceCanvas.height / sourceCanvas.width * countX)
@@ -62,7 +61,7 @@ function drawSource(){
     sourceCtx.drawImage(sourceImage, 0, 0)
     sourceCtx.lineWidth = .5
     sourceCtx.strokeStyle = 'red'
-    getRects().forEach(rect => {
+    rects.forEach(rect => {
         sourceCtx.beginPath()
         sourceCtx.rect(...rect)
         sourceCtx.stroke()
@@ -70,11 +69,18 @@ function drawSource(){
 }
 
 function drawResult(){
-    getRects().forEach((rect, i) => {
+    rects.forEach((rect, i) => {
         const x = i % model.count * model.size
         const y = Math.floor(i / model.count) * model.size
         resultCtx.drawImage(sourceImage, ...rect, x, y, model.size, model.size)
     })
+}
+
+function snapShot(){
+    console.log('snapshot')
+    // TODO save snapshot of the canvas
+    // console.log(resultCanvas.toDataURL())
+    // resultCanvas.toBlob()
 }
 
 const model = {
@@ -83,41 +89,30 @@ const model = {
     offsetX: 0, 
     offsetY: 0
 }
+var rects = getRects()
 const gui = new dat.GUI()
-const size = gui.add(model, 'size', 2, 1000).step(1).listen()
-const count = gui.add(model, 'count', 2, 400).step(1).listen()
+const size = gui.add(model, 'size', 2, 300).step(1).listen()
+const count = gui.add(model, 'count', 2, 50).step(1).listen()
 const offsetX = gui.add(model, 'offsetX', -100, 100).step(1).listen()
 const offsetY = gui.add(model, 'offsetY', -100, 100).step(1).listen()
+const btn = gui.add({snapshot: snapShot}, 'snapshot').listen()
 
-size.onChange((val) => {
+const update = function(){
+    rects = getRects()
     initResult()
     drawSource()
     drawResult()
-})
+}
 
-count.onChange((val) => {
-    initResult()
-    drawSource()
-    drawResult()
-})
-
-offsetX.onChange((val) => {
-    initResult()
-    drawSource()
-    drawResult()
-})
-
-offsetY.onChange((val) => {
-    initResult()
-    drawSource()
-    drawResult()
-})
+size.onChange(update)
+count.onChange(update)
+offsetX.onChange(update)
+offsetY.onChange(update)
 
 document.querySelectorAll('.option[type="image"]').forEach(el => {
     el.addEventListener('click', () => {
         model.size = parseInt(el.getAttribute('size'))
         model.count = parseInt(el.getAttribute('count'))
-        console.log(model)
         sourceImage.src = el.childNodes[0].src
     })
 })
