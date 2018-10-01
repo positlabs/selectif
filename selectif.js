@@ -1,8 +1,6 @@
 /*
 
     TODO
-    - save image button
-    - webcam input
     - webgl shader
     - video recorder
 
@@ -10,13 +8,16 @@
 
 var sourceInput = document.querySelector('.option[type="photo-upload"] input')
 var sourceImage = document.querySelector('img#source-image')
+var drawable = sourceImage
 var sourceCanvas = document.querySelector('canvas#source')
 var resultCanvas = document.querySelector('canvas#result')
 var sourceCtx = sourceCanvas.getContext('2d')
 var resultCtx = resultCanvas.getContext('2d')
+var video = document.querySelector('video')
 
 sourceInput.addEventListener('change', e => {
     if (sourceInput.files && sourceInput.files[0]) {
+        drawable = sourceImage
         var reader = new FileReader()
         reader.onload = function(e) {
             sourceImage.src = e.target.result
@@ -32,8 +33,13 @@ sourceImage.addEventListener('load', () => {
 
 // resize source canvas to source dimensions
 function initSource(){
-    sourceCanvas.width = sourceImage.naturalWidth
-    sourceCanvas.height = sourceImage.naturalHeight
+    if(drawable === sourceImage){
+        sourceCanvas.width = sourceImage.naturalWidth
+        sourceCanvas.height = sourceImage.naturalHeight
+    }else{
+        sourceCanvas.width = video.videoWidth
+        sourceCanvas.height = video.videoHeight
+    }
     drawSource()
 }
 
@@ -58,7 +64,7 @@ function getRects(){
 }
 
 function drawSource(){
-    sourceCtx.drawImage(sourceImage, 0, 0)
+    sourceCtx.drawImage(drawable, 0, 0)
     sourceCtx.lineWidth = .5
     sourceCtx.strokeStyle = 'red'
     rects.forEach(rect => {
@@ -72,12 +78,11 @@ function drawResult(){
     rects.forEach((rect, i) => {
         const x = i % model.count * model.size
         const y = Math.floor(i / model.count) * model.size
-        resultCtx.drawImage(sourceImage, ...rect, x, y, model.size, model.size)
+        resultCtx.drawImage(drawable, ...rect, x, y, model.size, model.size)
     })
 }
 
 function snapShot(){
-    console.log('snapshot')
     const image = resultCanvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
     const a = document.createElement('a')
     a.setAttribute('download', 'selectif-snapshot.png')
@@ -111,10 +116,48 @@ count.onChange(update)
 offsetX.onChange(update)
 offsetY.onChange(update)
 
+// preset source selector
 document.querySelectorAll('.option[type="image"]').forEach(el => {
     el.addEventListener('click', () => {
+        deactivateWebcam()
+        drawable = sourceImage
         model.size = parseInt(el.getAttribute('size'))
         model.count = parseInt(el.getAttribute('count'))
         sourceImage.src = el.childNodes[0].src
     })
+})
+
+var constraints = { audio: false, video: { width: 1280, height: 720 } }
+var activateWebcam = () => {
+
+    return new Promise((resolve, reject) => {
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(mediaStream => {
+                drawable = video
+                video.srcObject = mediaStream
+                video.onloadedmetadata = e => {
+                    document.body.classList.add('webcam')
+                    initSource()
+                    update()
+                    video.play()
+                    resolve()
+                }
+            }).catch(e => reject(e))
+    })
+}
+var deactivateWebcam = () => {
+    video.pause()
+    document.body.classList.remove('webcam')
+}
+
+var onFrame = () => {
+    if(video.paused) return
+    requestAnimationFrame(onFrame)
+    drawSource()
+    drawResult()
+}
+video.addEventListener('play', onFrame)
+
+document.querySelector('.option[type="webcam"]').addEventListener('click', () => {
+    activateWebcam()
 })
