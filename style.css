@@ -6,6 +6,10 @@ body {
     font-family: monospace;
 }
 
+body.webcam canvas {
+    transform: scaleX(-1);
+}
+
 canvas#source {
     position: absolute;
     top: 0; left: 0;
@@ -47,7 +51,7 @@ a {
     object-fit: cover;
 }
 
-#inputs .option[type='photo-upload'] {
+#inputs .option.user-input {
     font-size: 2em;
     text-align: center;
     line-height: 60px;
@@ -68,4 +72,13 @@ a {
     position: fixed;
     left: 0;
     top: 0;
+}
+
+video {
+    opacity: .00000001;
+    pointer-events: none;
+    z-index: -1;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100px;
 }

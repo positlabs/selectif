@@ -10,6 +10,7 @@
         <script src="dat.gui.min.js"></script>
     </head>
     <body>
+        <video></video>
         <img id="source-image" src="images/lincoln.jpg" hidden>
         <!-- <img id="source-image" src="images/washington.jpg" hidden> -->
         <!-- <img id="source-image" src="images/nick-cage.png" hidden> -->
@@ -19,7 +20,8 @@
             <div class="option" type='image' size='23' count='10'><img src="images/washington.jpg"></div>
             <div class="option" type='image' size='2' count='29'><img src="images/nick-cage.png"></div>
             <div class="option" type='image' size='105' count='15'><img src="images/jeff-goldblum.jpg"></div>
-            <div class="option" type='photo-upload' title='upload photo'>+<input type="file" accept="image/*"></div>
+            <div class="option user-input" type='webcam' title='webcam'>📹</div>
+            <div class="option user-input" type='photo-upload' title='upload photo'>🖼️<input type="file" accept="image/*"></div>
         </div>
         <canvas id="source"></canvas>
         <canvas id="result"></canvas>
