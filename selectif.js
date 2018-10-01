@@ -78,9 +78,11 @@ function drawResult(){
 
 function snapShot(){
     console.log('snapshot')
-    // TODO save snapshot of the canvas
-    // console.log(resultCanvas.toDataURL())
-    // resultCanvas.toBlob()
+    const image = resultCanvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
+    const a = document.createElement('a')
+    a.setAttribute('download', 'selectif-snapshot.png')
+    a.href = image
+    a.click()
 }
 
 const model = {
